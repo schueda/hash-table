@@ -1,0 +1,8 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/andreschueda/Faculdade/TerceiroSemestre/algoritmos3/trab2/asm21'
+cc -Wall   -c -o main.o main.c
+ 
+cc -Wall   -c -o table.o table.c
+gcc -Wall main.o table.o -o myht
+make: Leaving directory `/Users/andreschueda/Faculdade/TerceiroSemestre/algoritmos3/trab2/asm21'
+ 
