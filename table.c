@@ -23,5 +23,4 @@ int table_remove(int key, table *t) {
 }
 
 void print_table(table *t) {
-    return 0;
 }

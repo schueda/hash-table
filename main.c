@@ -8,24 +8,26 @@
 int main() {
     char line[LINE_SIZE+1];
     int key;
+
+    table *t = malloc(sizeof(table));
     
     fgets(line, LINE_SIZE, stdin);
     while (!feof(stdin)) {
         key = atoi(&line[1]);
 
         if (line[0] == 'i') {
-            table_insert(key);
+            table_insert(key, t);
         }
 
         if (line[0] == 'r') {
-            tbale_remove(key);
+            table_remove(key, t);
         }
 
         fgets(line, LINE_SIZE, stdin);
     }
 
-    //PRINTA AS TABELAS
+    print_table(t);
 
-
+    free(t);
     return 0;
 }
