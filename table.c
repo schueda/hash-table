@@ -5,14 +5,17 @@
 
 #include "table.h"
 
+//Função hash para a primeira tabela
 int hash1(int key) {
     return key % M;
 }
 
+//Função hash para a segunda tabela
 int hash2(int key) {
     return floor(M * (key * 0.9 - floor(key * 0.9)));
 }
 
+//Função para criar a tabela
 table *create_table() {
     table *t = malloc(sizeof(table));
 
@@ -25,6 +28,7 @@ table *create_table() {
     return t;
 }
 
+//Função de busca na tabela
 int table_search(int key, table *t) {
     int index = hash1(key);
 
@@ -41,9 +45,11 @@ int table_search(int key, table *t) {
     return -1;
 }
 
+//Insere valor na tabela
 int table_insert(int key, table *t) {
     int index = hash1(key);
 
+    //Se a posição da primeira tabela estiver vazia, insere o valor
     if (!t->t1_valid[index]) {
         t->t1[index] = key;
         t->t1_valid[index] = 1;
@@ -51,21 +57,24 @@ int table_insert(int key, table *t) {
         return index;
     }
 
+    //Se o valor já estiver na tabela 1, retorna a posição
     if (t->t1[index] == key) {
         return index;
     }
 
+    //Se o valor já estiver na tabela 2, retorna a posição
     int index2 = hash2(key);
     if (t->t2_valid[index2]) {
-        return -1;
+        return index2;
     }
 
+    //Encontra o valor que já estava na tabela 1 no local da colisão e insere na tabela 2
     int found_key = t->t1[index];
     int found_index2 = hash2(found_key);
 
     t->t2[found_index2] = found_key;
     t->t2_valid[found_index2] = 1;
-
+    //Insere o valor na tabela 1
     t->t1[index] = key;
     t->t1_valid[index] = 1;
 
@@ -75,11 +84,13 @@ int table_insert(int key, table *t) {
 int table_remove(int key, table *t) {
     int index = hash1(key);
 
+    //Invalida o valor se estiver na tabela 1
     if (t->t1[index] == key) {
         t->t1_valid[index] = 0;
         return index;
     }
 
+    //Invalida o valor se estiver na tabela 2
     int index2 = hash2(key);
     t->t2_valid[index2] = 0;
 
@@ -88,6 +99,7 @@ int table_remove(int key, table *t) {
 
 
 int compare_strings(const void *a, const void *b) {
+    //Faz o parse dos valores da string para comparar
     int value_a = atoi(*(const char **)a);
     int value_b = atoi(*(const char **)b);
 
@@ -101,6 +113,7 @@ int compare_strings(const void *a, const void *b) {
     int index_a = atoi(second_comma_a + 1);
     int index_b = atoi(second_comma_b + 1);
 
+    //Compara os valores
     if (value_a < value_b) {
         return -1;
     } else if (value_a > value_b) {
@@ -122,10 +135,13 @@ int compare_strings(const void *a, const void *b) {
     }
 }
 
+//realiza a impressão da tabela
 void print_table(table *t) {
     char **elements = calloc(M * sizeof(char*), M);
 
     int i, j = 0;
+
+    //Insere os valores válidos da tabela 1 na array de elementos
     for (i = 0; i < M; i++) {
         if (t->t1_valid[i]) {
             elements[j] = malloc(20 * sizeof(char));
@@ -134,6 +150,7 @@ void print_table(table *t) {
         }
     }
 
+    //Insere os valores válidos da tabela 2 na array de elementos
     for (i = 0; i < M; i++) {
         if (t->t2_valid[i]) {
             elements[j] = malloc(20 * sizeof(char));
@@ -142,8 +159,11 @@ void print_table(table *t) {
         }
     }
 
+    //Ordena os valores da array de elementos
     qsort(elements, j, sizeof(char*), compare_strings);
 
+
+    //Exibe os elementos
     for (i = 0; i < j; i++) {
         printf("%s\n", elements[i]);
         free(elements[i]);
@@ -151,6 +171,7 @@ void print_table(table *t) {
     free(elements);
 }
 
+//Libera a memória alocada para a tabela
 void destroy_table(table *t) {
     free(t->t1);
     free(t->t1_valid);
