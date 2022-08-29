@@ -9,7 +9,7 @@ int main() {
     char line[LINE_SIZE+1];
     int key;
 
-    table *t = malloc(sizeof(table));
+    table *t = create_table();
     
     fgets(line, LINE_SIZE, stdin);
     while (!feof(stdin)) {
@@ -25,9 +25,8 @@ int main() {
 
         fgets(line, LINE_SIZE, stdin);
     }
-
     print_table(t);
 
-    free(t);
+    destroy_table(t);
     return 0;
 }
