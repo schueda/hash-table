@@ -1,4 +1,4 @@
-CFLAGS = -Wall
+CFLAGS = -Wall -lm
 EXEC_NAME = myht
 OBJS = main.o table.o
 
